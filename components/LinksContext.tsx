@@ -11,10 +11,17 @@ type NewLinkInput = {
   thumbnail?: string;
 };
 
+type EditLinkInput = {
+  folderId: string;
+  title: string;
+  description: string;
+};
+
 type LinksContextValue = {
   links: LinkItem[];
   addLink: (input: NewLinkInput) => void;
   removeLink: (id: string) => void;
+  updateLink: (id: string, input: EditLinkInput) => void;
 };
 
 const LinksContext = createContext<LinksContextValue | null>(null);
@@ -37,8 +44,14 @@ export function LinksProvider({
     setLinks((prev) => prev.filter((link) => link.id !== id));
   }
 
+  function updateLink(id: string, input: EditLinkInput) {
+    setLinks((prev) =>
+      prev.map((link) => (link.id === id ? { ...link, ...input } : link))
+    );
+  }
+
   return (
-    <LinksContext.Provider value={{ links, addLink, removeLink }}>
+    <LinksContext.Provider value={{ links, addLink, removeLink, updateLink }}>
       {children}
     </LinksContext.Provider>
   );

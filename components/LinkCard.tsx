@@ -3,11 +3,15 @@
 import { useState } from "react";
 import type { LinkItem } from "@/app/_lib/mock-data";
 import { useLinks } from "@/components/LinksContext";
+import { useFolders } from "@/components/FoldersContext";
 import DeleteLinkModal from "@/components/DeleteLinkModal";
+import EditLinkModal from "@/components/EditLinkModal";
 
 export default function LinkCard({ link }: { link: LinkItem }) {
-  const { removeLink } = useLinks();
+  const { removeLink, updateLink } = useLinks();
+  const { folders } = useFolders();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const href = /^https?:\/\//i.test(link.url) ? link.url : `https://${link.url}`;
   const displayUrl = link.url.replace(/^https?:\/\//i, "");
 
@@ -45,6 +49,30 @@ export default function LinkCard({ link }: { link: LinkItem }) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
+          setIsEditModalOpen(true);
+        }}
+        aria-label={`${link.title} 링크 수정`}
+        className="absolute right-10 top-2 rounded-md bg-black/50 p-1.5 text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.75}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-4 w-4"
+        >
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
           setIsDeleteModalOpen(true);
         }}
         aria-label={`${link.title} 링크 삭제`}
@@ -74,6 +102,19 @@ export default function LinkCard({ link }: { link: LinkItem }) {
           onConfirm={() => {
             removeLink(link.id);
             setIsDeleteModalOpen(false);
+          }}
+        />
+      )}
+      {isEditModalOpen && (
+        <EditLinkModal
+          folders={folders}
+          initialFolderId={link.folderId}
+          initialTitle={link.title}
+          initialDescription={link.description}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={(input) => {
+            updateLink(link.id, input);
+            setIsEditModalOpen(false);
           }}
         />
       )}
