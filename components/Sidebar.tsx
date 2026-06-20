@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Folder } from "@/app/_lib/mock-data";
+import { useFolders } from "@/components/FoldersContext";
 
-export default function Sidebar({ folders }: { folders: Folder[] }) {
+export default function Sidebar() {
   const pathname = usePathname();
+  const { folders } = useFolders();
 
   return (
     <aside className="w-56 shrink-0 border-r border-[var(--border)] px-4 py-6">
