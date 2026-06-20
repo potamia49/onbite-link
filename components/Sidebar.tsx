@@ -8,14 +8,14 @@ export default function Sidebar({ folders }: { folders: Folder[] }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-56 shrink-0 border-r border-zinc-200 px-4 py-6 dark:border-zinc-800">
+    <aside className="w-56 shrink-0 border-r border-[var(--border)] px-4 py-6">
       <nav className="flex flex-col gap-1">
         <Link
           href="/"
-          className={`rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
+          className={`nav-item rounded-md px-3 py-2 text-left text-sm font-medium ${
             pathname === "/"
-              ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900"
-              : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              ? "nav-item-active"
+              : "text-[var(--text-sub)]"
           }`}
         >
           ALL
@@ -27,10 +27,8 @@ export default function Sidebar({ folders }: { folders: Folder[] }) {
             <Link
               key={folder.id}
               href={href}
-              className={`rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900"
-                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              className={`nav-item rounded-md px-3 py-2 text-left text-sm font-medium ${
+                isActive ? "nav-item-active" : "text-[var(--text-sub)]"
               }`}
             >
               {folder.name}

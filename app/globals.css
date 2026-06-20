@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f7f5;
+  --surface: #ffffff;
+  --text: #37352f;
+  --text-sub: #787774;
+  --placeholder: #c4c4c0;
+  --border: #e3e3e0;
+  --accent: #2eaadc;
+  --accent-hover: #2898c4;
+  --hover-bg: #f1f1ef;
+  --error: #eb5757;
+  --success: #4dab9a;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-foreground: var(--text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    sans-serif;
+}
+
+a,
+button,
+input,
+select,
+.nav-item {
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.nav-bar {
+  background: rgba(247, 247, 245, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  background: var(--hover-bg);
+}
+
+.input-field {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+.input-field::placeholder {
+  color: var(--placeholder);
+}
+.input-field:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.card-hover:hover {
+  background: var(--background);
+}
+
+.nav-item:hover {
+  background: var(--hover-bg);
+}
+
+.nav-item-active {
+  background: var(--hover-bg);
+  color: var(--text);
+  font-weight: 600;
 }

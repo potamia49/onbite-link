@@ -34,7 +34,7 @@ export default function RootLayout({
         <Header />
         <div className="flex flex-1">
           <Sidebar folders={folders} />
-          <main className="flex-1 px-6 py-6">{children}</main>
+          <main className="flex-1 px-6 pt-10 pb-6">{children}</main>
         </div>
       </body>
     </html>
