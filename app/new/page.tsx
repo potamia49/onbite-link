@@ -1,6 +1,10 @@
+"use client";
+
 import NewLinkForm from "@/components/NewLinkForm";
-import { folders } from "../_lib/mock-data";
+import { useFolders } from "@/components/FoldersContext";
 
 export default function NewLinkPage() {
+  const { folders } = useFolders();
+
   return <NewLinkForm folders={folders} />;
 }

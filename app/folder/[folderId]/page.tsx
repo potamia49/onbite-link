@@ -1,12 +1,12 @@
-import LinkGrid from "@/components/LinkGrid";
-import { links } from "../../_lib/mock-data";
+"use client";
 
-export default async function FolderPage({
-  params,
-}: {
-  params: Promise<{ folderId: string }>;
-}) {
-  const { folderId } = await params;
+import { useParams } from "next/navigation";
+import LinkGrid from "@/components/LinkGrid";
+import { useLinks } from "@/components/LinksContext";
+
+export default function FolderPage() {
+  const { folderId } = useParams<{ folderId: string }>();
+  const { links } = useLinks();
   const folderLinks = links.filter((link) => link.folderId === folderId);
 
   return <LinkGrid links={folderLinks} />;

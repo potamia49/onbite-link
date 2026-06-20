@@ -1,6 +1,10 @@
+"use client";
+
 import LinkGrid from "@/components/LinkGrid";
-import { links } from "./_lib/mock-data";
+import { useLinks } from "@/components/LinksContext";
 
 export default function Home() {
+  const { links } = useLinks();
+
   return <LinkGrid links={links} />;
 }

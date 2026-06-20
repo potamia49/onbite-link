@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { FoldersProvider } from "@/components/FoldersContext";
-import { folders } from "./_lib/mock-data";
+import { LinksProvider } from "@/components/LinksContext";
+import { folders, links } from "./_lib/mock-data";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,11 +34,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <FoldersProvider initialFolders={folders}>
-          <Header />
-          <div className="flex flex-1">
-            <Sidebar />
-            <main className="flex-1 px-6 pt-10 pb-6">{children}</main>
-          </div>
+          <LinksProvider initialLinks={links}>
+            <Header />
+            <div className="flex flex-1">
+              <Sidebar />
+              <main className="flex-1 px-6 pt-10 pb-6">{children}</main>
+            </div>
+          </LinksProvider>
         </FoldersProvider>
       </body>
     </html>
