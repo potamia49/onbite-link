@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { FoldersProvider } from "@/components/FoldersContext";
 import { LinksProvider } from "@/components/LinksContext";
-import { folders, links } from "./_lib/mock-data";
+import { links, type Folder } from "./_lib/mock-data";
+import { createClient } from "@/utils/supabase/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,11 +24,23 @@ export const metadata: Metadata = {
   description: "북마크 관리 서비스 한입 링크",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  const { data } = await supabase
+    .from("folders")
+    .select("id, name")
+    .order("id", { ascending: true });
+
+  const folders: Folder[] = (data ?? []).map((row) => ({
+    id: String(row.id),
+    name: row.name,
+  }));
+
   return (
     <html
       lang="en"

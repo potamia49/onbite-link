@@ -7,7 +7,19 @@ import NewFolderModal from "@/components/NewFolderModal";
 
 export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { addFolder } = useFolders();
+
+  async function handleCreateFolder(name: string) {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await addFolder(name);
+      setIsModalOpen(false);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <header className="nav-bar sticky top-0 z-10 flex h-12 items-center justify-between border-b border-[var(--border)] px-4">
@@ -32,10 +44,8 @@ export default function Header() {
       {isModalOpen && (
         <NewFolderModal
           onClose={() => setIsModalOpen(false)}
-          onCreate={(name) => {
-            addFolder(name);
-            setIsModalOpen(false);
-          }}
+          onCreate={handleCreateFolder}
+          isSubmitting={isSubmitting}
         />
       )}
     </header>

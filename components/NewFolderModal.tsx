@@ -6,13 +6,16 @@ import { createPortal } from "react-dom";
 export default function NewFolderModal({
   onClose,
   onCreate,
+  isSubmitting,
 }: {
   onClose: () => void;
   onCreate: (name: string) => void;
+  isSubmitting: boolean;
 }) {
   const [name, setName] = useState("");
 
   function handleSubmit() {
+    if (isSubmitting) return;
     const trimmed = name.trim();
     if (!trimmed) return;
     onCreate(trimmed);
@@ -58,7 +61,7 @@ export default function NewFolderModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={!name.trim()}
+            disabled={!name.trim() || isSubmitting}
             className="btn-primary rounded-md px-4 py-2 text-sm font-medium"
           >
             저장

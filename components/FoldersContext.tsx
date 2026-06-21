@@ -2,10 +2,11 @@
 
 import { createContext, useContext, useState } from "react";
 import type { Folder } from "@/app/_lib/mock-data";
+import { createClient } from "@/utils/supabase/client";
 
 type FoldersContextValue = {
   folders: Folder[];
-  addFolder: (name: string) => void;
+  addFolder: (name: string) => Promise<void>;
   removeFolder: (id: string) => void;
   renameFolder: (id: string, name: string) => void;
 };
@@ -21,8 +22,19 @@ export function FoldersProvider({
 }) {
   const [folders, setFolders] = useState(initialFolders);
 
-  function addFolder(name: string) {
-    const folder: Folder = { id: `folder-${Date.now()}`, name };
+  async function addFolder(name: string) {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("folders")
+      .insert({ name })
+      .select()
+      .single();
+
+    if (error || !data) {
+      throw error;
+    }
+
+    const folder: Folder = { id: String(data.id), name: data.name };
     setFolders((prev) => [...prev, folder]);
   }
 
