@@ -22,7 +22,7 @@ type LinksContextValue = {
   links: LinkItem[];
   addLink: (input: NewLinkInput) => Promise<void>;
   removeLink: (id: string) => void;
-  updateLink: (id: string, input: EditLinkInput) => void;
+  updateLink: (id: string, input: EditLinkInput) => Promise<void>;
 };
 
 const LinksContext = createContext<LinksContextValue | null>(null);
@@ -69,7 +69,21 @@ export function LinksProvider({
     setLinks((prev) => prev.filter((link) => link.id !== id));
   }
 
-  function updateLink(id: string, input: EditLinkInput) {
+  async function updateLink(id: string, input: EditLinkInput) {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("links")
+      .update({
+        folder_id: Number(input.folderId),
+        title: input.title,
+        description: input.description,
+      })
+      .eq("id", id);
+
+    if (error) {
+      throw error;
+    }
+
     setLinks((prev) =>
       prev.map((link) => (link.id === id ? { ...link, ...input } : link))
     );

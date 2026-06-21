@@ -112,8 +112,8 @@ export default function LinkCard({ link }: { link: LinkItem }) {
           initialTitle={link.title}
           initialDescription={link.description}
           onClose={() => setIsEditModalOpen(false)}
-          onSave={(input) => {
-            updateLink(link.id, input);
+          onSave={async (input) => {
+            await updateLink(link.id, input);
             setIsEditModalOpen(false);
           }}
         />
