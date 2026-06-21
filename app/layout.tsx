@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { FoldersProvider } from "@/components/FoldersContext";
 import { LinksProvider } from "@/components/LinksContext";
-import { links, type Folder } from "./_lib/mock-data";
+import type { Folder, LinkItem } from "./_lib/mock-data";
 import { createClient } from "@/utils/supabase/server";
 import "./globals.css";
 
@@ -39,6 +39,20 @@ export default async function RootLayout({
   const folders: Folder[] = (data ?? []).map((row) => ({
     id: String(row.id),
     name: row.name,
+  }));
+
+  const { data: linksData } = await supabase
+    .from("links")
+    .select("id, url, title, description, thumbnail_url, folder_id")
+    .order("id", { ascending: true });
+
+  const links: LinkItem[] = (linksData ?? []).map((row) => ({
+    id: String(row.id),
+    folderId: row.folder_id !== null ? String(row.folder_id) : "",
+    title: row.title ?? "",
+    url: row.url,
+    description: row.description ?? "",
+    thumbnail: row.thumbnail_url ?? undefined,
   }));
 
   return (

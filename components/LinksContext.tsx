@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 import type { LinkItem } from "@/app/_lib/mock-data";
+import { createClient } from "@/utils/supabase/client";
 
 type NewLinkInput = {
   folderId: string;
@@ -19,7 +20,7 @@ type EditLinkInput = {
 
 type LinksContextValue = {
   links: LinkItem[];
-  addLink: (input: NewLinkInput) => void;
+  addLink: (input: NewLinkInput) => Promise<void>;
   removeLink: (id: string) => void;
   updateLink: (id: string, input: EditLinkInput) => void;
 };
@@ -35,8 +36,32 @@ export function LinksProvider({
 }) {
   const [links, setLinks] = useState(initialLinks);
 
-  function addLink(input: NewLinkInput) {
-    const link: LinkItem = { id: `link-${Date.now()}`, ...input };
+  async function addLink(input: NewLinkInput) {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("links")
+      .insert({
+        url: input.url,
+        title: input.title,
+        description: input.description,
+        thumbnail_url: input.thumbnail || null,
+        folder_id: Number(input.folderId),
+      })
+      .select()
+      .single();
+
+    if (error || !data) {
+      throw error;
+    }
+
+    const link: LinkItem = {
+      id: String(data.id),
+      folderId: String(data.folder_id),
+      title: data.title ?? "",
+      url: data.url,
+      description: data.description ?? "",
+      thumbnail: data.thumbnail_url ?? undefined,
+    };
     setLinks((prev) => [...prev, link]);
   }
 

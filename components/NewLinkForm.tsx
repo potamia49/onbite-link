@@ -29,7 +29,7 @@ export default function NewLinkForm({ folders }: { folders: Folder[] }) {
         throw new Error(data.error ?? "오픈그래프 정보를 가져오지 못했습니다.");
       }
 
-      addLink({
+      await addLink({
         folderId,
         url: data.url,
         title: data.title,
