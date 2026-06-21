@@ -21,7 +21,7 @@ type EditLinkInput = {
 type LinksContextValue = {
   links: LinkItem[];
   addLink: (input: NewLinkInput) => Promise<void>;
-  removeLink: (id: string) => void;
+  removeLink: (id: string) => Promise<void>;
   updateLink: (id: string, input: EditLinkInput) => Promise<void>;
 };
 
@@ -65,7 +65,14 @@ export function LinksProvider({
     setLinks((prev) => [...prev, link]);
   }
 
-  function removeLink(id: string) {
+  async function removeLink(id: string) {
+    const supabase = createClient();
+    const { error } = await supabase.from("links").delete().eq("id", id);
+
+    if (error) {
+      throw error;
+    }
+
     setLinks((prev) => prev.filter((link) => link.id !== id));
   }
 

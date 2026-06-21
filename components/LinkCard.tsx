@@ -99,8 +99,8 @@ export default function LinkCard({ link }: { link: LinkItem }) {
         <DeleteLinkModal
           linkTitle={link.title}
           onClose={() => setIsDeleteModalOpen(false)}
-          onConfirm={() => {
-            removeLink(link.id);
+          onConfirm={async () => {
+            await removeLink(link.id);
             setIsDeleteModalOpen(false);
           }}
         />
