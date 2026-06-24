@@ -7,6 +7,7 @@ import { useFolders } from "@/components/FoldersContext";
 import DeleteFolderModal from "@/components/DeleteFolderModal";
 import EditFolderModal from "@/components/EditFolderModal";
 import type { Folder } from "@/app/_lib/mock-data";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -14,6 +15,16 @@ export default function Sidebar() {
   const { folders, removeFolder, renameFolder } = useFolders();
   const [folderToDelete, setFolderToDelete] = useState<Folder | null>(null);
   const [folderToEdit, setFolderToEdit] = useState<Folder | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  }
 
   async function handleConfirmDelete() {
     if (!folderToDelete) return;
@@ -33,8 +44,8 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-56 shrink-0 border-r border-[var(--border)] px-4 py-6">
-      <nav className="flex flex-col gap-1">
+    <aside className="flex w-56 shrink-0 flex-col border-r border-[var(--border)] px-4 py-6">
+      <nav className="flex flex-1 flex-col gap-1">
         <Link
           href="/"
           className={`nav-item rounded-md px-3 py-2 text-left text-sm font-medium ${
@@ -113,6 +124,14 @@ export default function Sidebar() {
           );
         })}
       </nav>
+      <button
+        type="button"
+        onClick={handleLogout}
+        disabled={isLoggingOut}
+        className="nav-item mt-2 rounded-md px-3 py-2 text-left text-sm font-medium text-[var(--text-sub)]"
+      >
+        {isLoggingOut ? "로그아웃 중..." : "로그아웃"}
+      </button>
       {folderToDelete && (
         <DeleteFolderModal
           folderName={folderToDelete.name}
